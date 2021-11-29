@@ -1,5 +1,6 @@
-package com.matan.paintings.painting;
+package com.matan.paintings.painting.implemenatations;
 
+import com.matan.paintings.painting.interfaces.IPaintingDTO;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -7,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.Date;
 
 @Document
-public class Painting implements IPainting{
+public class PaintingDTO implements IPaintingDTO {
     @Id
     private String id;
     @Indexed(unique = true)
@@ -26,7 +27,7 @@ public class Painting implements IPainting{
         this.id = id;
     }
 
-    public Painting(String name, String description, String url, Date date, String artist, double price) {
+    public PaintingDTO(String name, String description, String url, Date date, String artist, double price) {
         this.name = name;
         this.description = description;
         this.url = url;

@@ -1,8 +1,8 @@
-package com.matan.paintings.painting;
+package com.matan.paintings.painting.interfaces;
 
 import java.util.Date;
 
-public interface IPainting {
+public interface IPaintingDTO {
     void setName(String name);
     void setId(String id);
     void setDescription(String description);

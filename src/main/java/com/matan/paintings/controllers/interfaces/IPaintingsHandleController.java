@@ -1,10 +1,11 @@
 package com.matan.paintings.controllers.interfaces;
 
-import com.matan.paintings.painting.Painting;
+import com.matan.paintings.painting.implemenatations.PaintingDTO;
+import com.matan.paintings.painting.interfaces.IPaintingDTO;
 import org.springframework.web.bind.annotation.RequestBody;
 
 public interface IPaintingsHandleController {
 
     String getPaintings();
-    Painting postPainting(@RequestBody Painting painting);
+    IPaintingDTO postPainting(@RequestBody PaintingDTO painting);
 }
