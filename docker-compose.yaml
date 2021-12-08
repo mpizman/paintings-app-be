@@ -14,7 +14,7 @@ services:
     ports:
       - 27017:27017
     volumes:
-      - data:/data
+      - paintingAppData:/data/db
     environment:
       - MONGO_INITDB_ROOT_USERNAME=rootuser
       - MONGO_INITDB_ROOT_PASSWORD=rootpass
@@ -48,4 +48,4 @@ services:
       default:
         ipv4_address: 172.18.0.4
 volumes:
-  data: {}
+  paintingAppData:
