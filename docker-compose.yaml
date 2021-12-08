@@ -30,6 +30,8 @@ services:
     environment:
       - ME_CONFIG_MONGODB_ADMINUSERNAME=rootuser
       - ME_CONFIG_MONGODB_ADMINPASSWORD=rootpass
+      - ME_CONFIG_BASICAUTH_USERNAME=matan
+      - ME_CONFIG_BASICAUTH_PASSWORD=matan95
       - ME_CONFIG_MONGODB_SERVER=mongodb
     networks:
       default:
