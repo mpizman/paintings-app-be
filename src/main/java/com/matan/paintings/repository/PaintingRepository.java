@@ -1,11 +1,10 @@
 package com.matan.paintings.repository;
 
-import com.matan.paintings.painting.implemenatations.PaintingDTO;
-import com.matan.paintings.painting.interfaces.IPaintingDTO;
+import com.matan.paintings.DTOs.implemenatations.PaintingDTO;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import java.util.Optional;
-
 public interface PaintingRepository extends MongoRepository<PaintingDTO,String> {
-    Optional<PaintingDTO> findPaintingByName(String name);
+    //    Optional<PaintingDTO> findPaintingByName(String name);
+    //    Optional<List<PaintingDTO>> findPaintingDTOByName(String name);
+//        Optional<List<PaintingDTO>> find (String name);
 }

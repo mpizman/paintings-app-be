@@ -1,9 +1,10 @@
-package com.matan.paintings.painting.implemenatations;
+package com.matan.paintings.DTOs.implemenatations;
 
-import com.matan.paintings.painting.interfaces.IPaintingDTO;
+import com.matan.paintings.DTOs.interfaces.IPaintingDTO;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.TextScore;
 
 import java.util.Date;
 
@@ -11,21 +12,16 @@ import java.util.Date;
 public class PaintingDTO implements IPaintingDTO {
     @Id
     private String id;
-    @Indexed(unique = true)
+    @TextIndexed(weight=2)
     private String name;
+    @TextIndexed
     private String description;
     private String url;
     private Date date;
     private String artist;
     private double price;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
+    @TextScore
+    private Float score;
 
     public PaintingDTO(String name, String description, String url, Date date, String artist, double price) {
         this.name = name;
@@ -34,6 +30,22 @@ public class PaintingDTO implements IPaintingDTO {
         this.date = date;
         this.artist = artist;
         this.price = price;
+    }
+
+    public Float getScore() {
+        return score;
+    }
+
+    public void setScore(Float score) {
+        this.score = score;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public void setName(String name) {

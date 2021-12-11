@@ -1,14 +1,19 @@
 package com.matan.paintings.controllers.implementations;
 
+import com.matan.paintings.DTOs.interfaces.ISortDTO;
 import com.matan.paintings.controllers.interfaces.IPaintingsHandleController;
-import com.matan.paintings.painting.implemenatations.PaintingDTO;
-import com.matan.paintings.painting.interfaces.IPaintingDTO;
-import com.matan.paintings.repository.PaintingRepository;
+import com.matan.paintings.DTOs.implemenatations.PaintingDTO;
+import com.matan.paintings.DTOs.interfaces.IPaintingDTO;
 import com.matan.paintings.services.interfaces.IGetPaintingByIdService;
+import com.matan.paintings.services.interfaces.IGetPaintingsService;
 import com.matan.paintings.services.interfaces.IPostPaintingService;
+import com.matan.paintings.services.mappers.interfaces.ISortInputToSortDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class PaintingsHandleController implements IPaintingsHandleController {
@@ -19,12 +24,25 @@ public class PaintingsHandleController implements IPaintingsHandleController {
     @Autowired
     IGetPaintingByIdService getPaintingByIdService;
 
-    @GetMapping("/paintings")
-    public String getPaintings() {
-        return "Paintings";
+    @Autowired
+    IGetPaintingsService getPaintingsService;
+
+    @Autowired
+    ISortInputToSortDTO sortInputToSortDTO;
+
+    @Override
+    @GetMapping("api/paintings")
+    public List<PaintingDTO> getPaintings(@RequestParam Optional<String> searchQuery,
+                                          @RequestParam Optional<String> sortField,
+                                          @RequestParam Optional<String> sortOrder,
+                                          @RequestParam Optional<Integer> pageNumber,
+                                          @RequestParam Optional<Integer> rpp) {
+        ISortDTO sortDTO = sortInputToSortDTO.map(sortOrder.orElse("dec"), sortField.orElse("score"));
+        return getPaintingsService.execute(searchQuery.orElse(""), pageNumber.orElse(0), rpp.orElse(10));
     }
 
-    @PostMapping(path = "/painting",
+    @Override
+    @PostMapping(path = "api/painting",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
 
@@ -32,8 +50,8 @@ public class PaintingsHandleController implements IPaintingsHandleController {
         return postPaintingService.execute(painting);
     }
 
-    @GetMapping("/painting/{id}")
-    public IPaintingDTO getPainting(@PathVariable(value="id") String id) {
+    @GetMapping("api/painting/{id}")
+    public IPaintingDTO getPainting(@PathVariable(value = "id") String id) {
         return getPaintingByIdService.execute(id);
     }
 
