@@ -1,5 +1,6 @@
 package com.matan.paintings.controllers.implementations;
 
+import com.matan.paintings.DTOs.interfaces.IPaginationDTO;
 import com.matan.paintings.DTOs.interfaces.ISortDTO;
 import com.matan.paintings.controllers.interfaces.IPaintingsHandleController;
 import com.matan.paintings.DTOs.implemenatations.PaintingDTO;
@@ -7,6 +8,7 @@ import com.matan.paintings.DTOs.interfaces.IPaintingDTO;
 import com.matan.paintings.services.interfaces.IGetPaintingByIdService;
 import com.matan.paintings.services.interfaces.IGetPaintingsService;
 import com.matan.paintings.services.interfaces.IPostPaintingService;
+import com.matan.paintings.services.mappers.interfaces.IPaginationInputToPaginationDTO;
 import com.matan.paintings.services.mappers.interfaces.ISortInputToSortDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -30,6 +32,9 @@ public class PaintingsHandleController implements IPaintingsHandleController {
     @Autowired
     ISortInputToSortDTO sortInputToSortDTO;
 
+    @Autowired
+    IPaginationInputToPaginationDTO paginationInputToPaginationDTO;
+
     @Override
     @GetMapping("api/paintings")
     public List<PaintingDTO> getPaintings(@RequestParam Optional<String> searchQuery,
@@ -38,7 +43,8 @@ public class PaintingsHandleController implements IPaintingsHandleController {
                                           @RequestParam Optional<Integer> pageNumber,
                                           @RequestParam Optional<Integer> rpp) {
         ISortDTO sortDTO = sortInputToSortDTO.map(sortOrder.orElse("dec"), sortField.orElse("score"));
-        return getPaintingsService.execute(searchQuery.orElse(""), pageNumber.orElse(0), rpp.orElse(10));
+        IPaginationDTO paginationDTO = paginationInputToPaginationDTO.map(pageNumber.orElse(0), rpp.orElse(10));
+        return getPaintingsService.execute(searchQuery.orElse(""), sortDTO, paginationDTO);
     }
 
     @Override

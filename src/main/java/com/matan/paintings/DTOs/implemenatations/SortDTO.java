@@ -1,10 +1,11 @@
 package com.matan.paintings.DTOs.implemenatations;
 
 import com.matan.paintings.DTOs.interfaces.ISortDTO;
+import org.springframework.data.domain.Sort;
 
 public class SortDTO implements ISortDTO {
     private String field;
-    private String order;
+    private Sort.Direction order;
 
     @Override
     public String getField() {
@@ -17,12 +18,12 @@ public class SortDTO implements ISortDTO {
     }
 
     @Override
-    public String getOrder() {
+    public Sort.Direction getOrder() {
         return order;
     }
 
     @Override
-    public void setOrder(String order) {
+    public void setOrder(Sort.Direction order) {
         this.order = order;
     }
 }
