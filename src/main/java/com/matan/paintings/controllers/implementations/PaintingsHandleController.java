@@ -11,10 +11,10 @@ import com.matan.paintings.services.interfaces.IPostPaintingService;
 import com.matan.paintings.services.mappers.interfaces.IPaginationInputToPaginationDTO;
 import com.matan.paintings.services.mappers.interfaces.ISortInputToSortDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -37,7 +37,7 @@ public class PaintingsHandleController implements IPaintingsHandleController {
 
     @Override
     @GetMapping("api/paintings")
-    public List<PaintingDTO> getPaintings(@RequestParam Optional<String> searchQuery,
+    public Page<PaintingDTO> getPaintings(@RequestParam Optional<String> searchQuery,
                                           @RequestParam Optional<String> sortField,
                                           @RequestParam Optional<String> sortOrder,
                                           @RequestParam Optional<Integer> pageNumber,

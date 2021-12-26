@@ -6,16 +6,18 @@ import com.matan.paintings.DTOs.interfaces.ISortDTO;
 import com.matan.paintings.repository.PaintingRepository;
 import com.matan.paintings.services.interfaces.IGetPaintingsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
+import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.data.mongodb.core.query.TextQuery;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class GetPaintingsService implements IGetPaintingsService {
+
+    @Autowired
+    private MongoOperations mongoOperations;
 
     @Autowired
     PaintingRepository paintingRepository;
@@ -24,20 +26,20 @@ public class GetPaintingsService implements IGetPaintingsService {
     MongoTemplate mongoTemplate;
 
     @Override
-    public List<PaintingDTO> execute(String searchQuery, ISortDTO sortDTO, IPaginationDTO paginationDTO) {
+    public Page<PaintingDTO> execute(String searchQuery, ISortDTO sortDTO, IPaginationDTO paginationDTO) {
+        List<PaintingDTO> paintingDTOList;
         TextCriteria textCriteria = TextCriteria.forDefaultLanguage().matchingAny(searchQuery);
+        Sort sort = Sort.by(sortDTO.getOrder(), "score");
+        TextQuery textQuery = TextQuery.queryText(textCriteria);
 
-        switch (sortDTO.getField()) {
-            case "score":
-                return mongoTemplate.find(TextQuery.queryText(textCriteria)
-                        .sortByScore()
-                        .with(PageRequest.of(paginationDTO.getPageNumber(),paginationDTO.getRpp())), PaintingDTO.class);
-            case "date":
-                return mongoTemplate.find(TextQuery.queryText(textCriteria)
-                        .with(PageRequest.of(paginationDTO.getPageNumber(),paginationDTO.getRpp()))
-                        .with(Sort.by(sortDTO.getOrder(), "date")), PaintingDTO.class);
-            default:
-                return new ArrayList<>();
+        if ("date".equals(sortDTO.getField())) {
+            sort = Sort.by(sortDTO.getOrder(), "date");
         }
+
+        Pageable pageable = PageRequest.of(paginationDTO.getPageNumber(), paginationDTO.getRpp(), sort);
+        long count = mongoOperations.count(textQuery, PaintingDTO.class);
+        paintingDTOList = mongoTemplate.find(textQuery.with(pageable), PaintingDTO.class);
+
+        return new PageImpl<>(paintingDTOList, pageable, count);
     }
 }
