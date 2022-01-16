@@ -1,6 +1,6 @@
-package com.matan.paintings.DTOs.implemenatations;
+package com.matan.paintings.models.implemenatations;
 
-import com.matan.paintings.DTOs.interfaces.IPaginationDTO;
+import com.matan.paintings.models.interfaces.IPaginationDTO;
 
 public class PaginationDTO implements IPaginationDTO {
     private int rpp;

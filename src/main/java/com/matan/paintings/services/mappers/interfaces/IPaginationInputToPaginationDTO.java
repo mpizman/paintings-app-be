@@ -1,6 +1,6 @@
 package com.matan.paintings.services.mappers.interfaces;
 
-import com.matan.paintings.DTOs.interfaces.IPaginationDTO;
+import com.matan.paintings.models.interfaces.IPaginationDTO;
 
 public interface IPaginationInputToPaginationDTO {
 

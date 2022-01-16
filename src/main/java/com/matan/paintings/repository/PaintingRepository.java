@@ -1,6 +1,6 @@
 package com.matan.paintings.repository;
 
-import com.matan.paintings.DTOs.implemenatations.PaintingDTO;
+import com.matan.paintings.models.implemenatations.PaintingDTO;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface PaintingRepository extends MongoRepository<PaintingDTO,String> {

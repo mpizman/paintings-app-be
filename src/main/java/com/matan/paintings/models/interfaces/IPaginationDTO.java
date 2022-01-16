@@ -1,4 +1,4 @@
-package com.matan.paintings.DTOs.interfaces;
+package com.matan.paintings.models.interfaces;
 
 public interface IPaginationDTO {
     int getRpp();

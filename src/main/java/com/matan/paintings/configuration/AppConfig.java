@@ -1,14 +1,18 @@
 package com.matan.paintings.configuration;
 
-import com.matan.paintings.DTOs.implemenatations.PaginationDTO;
-import com.matan.paintings.DTOs.implemenatations.SortDTO;
+import com.matan.paintings.models.implemenatations.PaginationDTO;
+import com.matan.paintings.models.implemenatations.SortDTO;
 import com.matan.paintings.services.implementations.GetPaintingByIdService;
 import com.matan.paintings.services.implementations.GetPaintingsService;
 import com.matan.paintings.services.implementations.PostPaintingService;
+import com.matan.paintings.services.implementations.UserService;
 import com.matan.paintings.services.mappers.implementation.PaginationInputToPaginationDTO;
 import com.matan.paintings.services.mappers.implementation.SortInputToSortDTO;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 public class AppConfig {
@@ -46,5 +50,20 @@ public class AppConfig {
     @Bean
     public PaginationInputToPaginationDTO paginationInputToPaginationDTO() {
         return new PaginationInputToPaginationDTO();
+    }
+
+    @Bean
+    public UserService userService(){
+        return new UserService();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public UserDetailsService userDetailsService() {
+        return new UserService();
     }
 }

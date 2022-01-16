@@ -1,8 +1,8 @@
 package com.matan.paintings.services.implementations;
 
-import com.matan.paintings.DTOs.implemenatations.PaintingDTO;
-import com.matan.paintings.DTOs.interfaces.IPaginationDTO;
-import com.matan.paintings.DTOs.interfaces.ISortDTO;
+import com.matan.paintings.models.implemenatations.PaintingDTO;
+import com.matan.paintings.models.interfaces.IPaginationDTO;
+import com.matan.paintings.models.interfaces.ISortDTO;
 import com.matan.paintings.repository.PaintingRepository;
 import com.matan.paintings.services.interfaces.IGetPaintingsService;
 import org.springframework.beans.factory.annotation.Autowired;

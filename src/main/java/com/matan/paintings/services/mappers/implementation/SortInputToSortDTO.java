@@ -1,6 +1,6 @@
 package com.matan.paintings.services.mappers.implementation;
 
-import com.matan.paintings.DTOs.interfaces.ISortDTO;
+import com.matan.paintings.models.interfaces.ISortDTO;
 import com.matan.paintings.services.mappers.interfaces.ISortInputToSortDTO;
 import org.springframework.data.domain.Sort;
 

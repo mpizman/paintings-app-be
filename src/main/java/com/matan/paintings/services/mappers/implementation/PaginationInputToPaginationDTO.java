@@ -1,6 +1,6 @@
 package com.matan.paintings.services.mappers.implementation;
 
-import com.matan.paintings.DTOs.interfaces.IPaginationDTO;
+import com.matan.paintings.models.interfaces.IPaginationDTO;
 import com.matan.paintings.services.mappers.interfaces.IPaginationInputToPaginationDTO;
 
 import javax.inject.Inject;

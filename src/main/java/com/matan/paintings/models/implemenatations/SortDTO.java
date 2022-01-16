@@ -1,6 +1,6 @@
-package com.matan.paintings.DTOs.implemenatations;
+package com.matan.paintings.models.implemenatations;
 
-import com.matan.paintings.DTOs.interfaces.ISortDTO;
+import com.matan.paintings.models.interfaces.ISortDTO;
 import org.springframework.data.domain.Sort;
 
 public class SortDTO implements ISortDTO {

@@ -1,10 +1,10 @@
 package com.matan.paintings.controllers.implementations;
 
-import com.matan.paintings.DTOs.interfaces.IPaginationDTO;
-import com.matan.paintings.DTOs.interfaces.ISortDTO;
+import com.matan.paintings.models.interfaces.IPaginationDTO;
+import com.matan.paintings.models.interfaces.ISortDTO;
 import com.matan.paintings.controllers.interfaces.IPaintingsHandleController;
-import com.matan.paintings.DTOs.implemenatations.PaintingDTO;
-import com.matan.paintings.DTOs.interfaces.IPaintingDTO;
+import com.matan.paintings.models.implemenatations.PaintingDTO;
+import com.matan.paintings.models.interfaces.IPaintingDTO;
 import com.matan.paintings.services.interfaces.IGetPaintingByIdService;
 import com.matan.paintings.services.interfaces.IGetPaintingsService;
 import com.matan.paintings.services.interfaces.IPostPaintingService;

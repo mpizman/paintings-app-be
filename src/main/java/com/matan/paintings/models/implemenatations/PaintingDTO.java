@@ -1,6 +1,6 @@
-package com.matan.paintings.DTOs.implemenatations;
+package com.matan.paintings.models.implemenatations;
 
-import com.matan.paintings.DTOs.interfaces.IPaintingDTO;
+import com.matan.paintings.models.interfaces.IPaintingDTO;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;

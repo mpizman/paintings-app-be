@@ -1,11 +1,9 @@
 package com.matan.paintings.services.interfaces;
 
-import com.matan.paintings.DTOs.implemenatations.PaintingDTO;
-import com.matan.paintings.DTOs.interfaces.IPaginationDTO;
-import com.matan.paintings.DTOs.interfaces.ISortDTO;
+import com.matan.paintings.models.implemenatations.PaintingDTO;
+import com.matan.paintings.models.interfaces.IPaginationDTO;
+import com.matan.paintings.models.interfaces.ISortDTO;
 import org.springframework.data.domain.Page;
-
-import java.util.List;
 
 public interface IGetPaintingsService {
 
