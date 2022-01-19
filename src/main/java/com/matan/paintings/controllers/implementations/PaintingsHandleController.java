@@ -1,5 +1,6 @@
 package com.matan.paintings.controllers.implementations;
 
+import com.github.fge.jsonpatch.JsonPatch;
 import com.matan.paintings.models.interfaces.IPaginationDTO;
 import com.matan.paintings.models.interfaces.ISortDTO;
 import com.matan.paintings.controllers.interfaces.IPaintingsHandleController;
@@ -7,14 +8,19 @@ import com.matan.paintings.models.implemenatations.PaintingDTO;
 import com.matan.paintings.models.interfaces.IPaintingDTO;
 import com.matan.paintings.services.interfaces.IGetPaintingByIdService;
 import com.matan.paintings.services.interfaces.IGetPaintingsService;
+import com.matan.paintings.services.interfaces.IPatchPaintingService;
 import com.matan.paintings.services.interfaces.IPostPaintingService;
 import com.matan.paintings.services.mappers.interfaces.IPaginationInputToPaginationDTO;
 import com.matan.paintings.services.mappers.interfaces.ISortInputToSortDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.FileNotFoundException;
 import java.util.Optional;
 
 @RestController
@@ -35,30 +41,58 @@ public class PaintingsHandleController implements IPaintingsHandleController {
     @Autowired
     IPaginationInputToPaginationDTO paginationInputToPaginationDTO;
 
+    @Autowired
+    IPatchPaintingService patchPaintingService;
+
     @Override
     @GetMapping("api/paintings")
-    public Page<PaintingDTO> getPaintings(@RequestParam Optional<String> searchQuery,
-                                          @RequestParam Optional<String> sortField,
-                                          @RequestParam Optional<String> sortOrder,
-                                          @RequestParam Optional<Integer> pageNumber,
-                                          @RequestParam Optional<Integer> rpp) {
+    public ResponseEntity<Page<PaintingDTO>> getPaintings(@RequestParam Optional<String> searchQuery,
+                                                          @RequestParam Optional<String> sortField,
+                                                          @RequestParam Optional<String> sortOrder,
+                                                          @RequestParam Optional<Integer> pageNumber,
+                                                          @RequestParam Optional<Integer> rpp) {
         ISortDTO sortDTO = sortInputToSortDTO.map(sortOrder.orElse("dec"), sortField.orElse("score"));
         IPaginationDTO paginationDTO = paginationInputToPaginationDTO.map(pageNumber.orElse(0), rpp.orElse(10));
-        return getPaintingsService.execute(searchQuery.orElse(""), sortDTO, paginationDTO);
+        return ResponseEntity.ok().body(getPaintingsService.execute(searchQuery.orElse(""), sortDTO, paginationDTO));
     }
 
     @Override
     @PostMapping(path = "api/painting",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-
-    public IPaintingDTO postPainting(@RequestBody PaintingDTO painting) {
-        return postPaintingService.execute(painting);
+    public ResponseEntity<IPaintingDTO> postPainting(@RequestBody PaintingDTO painting) {
+        return ResponseEntity.ok().body(postPaintingService.execute(painting));
     }
 
+    @Override
     @GetMapping("api/painting/{id}")
-    public IPaintingDTO getPainting(@PathVariable(value = "id") String id) {
-        return getPaintingByIdService.execute(id);
+    public ResponseEntity<IPaintingDTO> getPainting(@PathVariable(value = "id") String id) {
+        IPaintingDTO painting = getPaintingByIdService.execute(id);
+        if (painting != null) {
+            return ResponseEntity.ok().body(painting);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
+    @Override
+    @PatchMapping(path = "api/painting/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> patchPainting(@PathVariable(value = "id") String id, @RequestBody JsonPatch patchElements) {
+        try {
+            return ResponseEntity.ok().body(patchPaintingService.execute(id, patchElements));
+        } catch (FileNotFoundException fileNotFoundException){
+            return ResponseEntity.notFound().build();
+        } catch (InternalError internalError){
+            return ResponseEntity.internalServerError().build();
+        } catch (InsufficientAuthenticationException insufficientAuthenticationException) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } catch (RuntimeException runtimeException) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(runtimeException.getMessage());
+        }
+    }
+
+    @Override
+    public ResponseEntity<IPaintingDTO> deletePainting(String id) {
+        return null;
+    }
 }

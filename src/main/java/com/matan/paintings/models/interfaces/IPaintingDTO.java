@@ -34,4 +34,8 @@ public interface IPaintingDTO {
     Float getScore();
 
     void setScore(Float score);
+
+    public String getUploaderUsername();
+
+    public void setUploaderUsername(String uploaderUsername);
 }

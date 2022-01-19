@@ -2,10 +2,7 @@ package com.matan.paintings.configuration;
 
 import com.matan.paintings.models.implemenatations.PaginationDTO;
 import com.matan.paintings.models.implemenatations.SortDTO;
-import com.matan.paintings.services.implementations.GetPaintingByIdService;
-import com.matan.paintings.services.implementations.GetPaintingsService;
-import com.matan.paintings.services.implementations.PostPaintingService;
-import com.matan.paintings.services.implementations.UserService;
+import com.matan.paintings.services.implementations.*;
 import com.matan.paintings.services.mappers.implementation.PaginationInputToPaginationDTO;
 import com.matan.paintings.services.mappers.implementation.SortInputToSortDTO;
 import org.springframework.context.annotation.Bean;
@@ -65,5 +62,10 @@ public class AppConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         return new UserService();
+    }
+
+    @Bean
+    public PatchPaintingService patchPaintingService(){
+        return new PatchPaintingService();
     }
 }

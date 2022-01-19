@@ -2,6 +2,7 @@ package com.matan.paintings.models.implemenatations;
 
 import com.matan.paintings.models.interfaces.IUserDTO;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -18,11 +19,13 @@ public class UserDTO implements IUserDTO {
 
     @NotBlank
     @Size(max = 20)
+    @Indexed(unique=true)
     private String username;
 
     @NotBlank
     @Size(max = 100)
     @Email
+    @Indexed(unique=true)
     private String email;
 
     @NotBlank

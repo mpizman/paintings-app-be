@@ -2,10 +2,12 @@ package com.matan.paintings.models.implemenatations;
 
 import com.matan.paintings.models.interfaces.IPaintingDTO;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.TextScore;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Document
@@ -13,6 +15,7 @@ public class PaintingDTO implements IPaintingDTO {
     @Id
     private String id;
     @TextIndexed(weight=2)
+    @Indexed(unique=true)
     private String name;
     @TextIndexed
     private String description;
@@ -22,6 +25,12 @@ public class PaintingDTO implements IPaintingDTO {
     private double price;
     @TextScore
     private Float score;
+    @NotNull
+    private String uploaderUsername;
+
+    public PaintingDTO() {
+
+    }
 
     public PaintingDTO(String name, String description, String url, Date date, String artist, double price) {
         this.name = name;
@@ -94,5 +103,13 @@ public class PaintingDTO implements IPaintingDTO {
 
     public double getPrice() {
         return price;
+    }
+
+    public String getUploaderUsername() {
+        return uploaderUsername;
+    }
+
+    public void setUploaderUsername(String uploaderUsername) {
+        this.uploaderUsername = uploaderUsername;
     }
 }
