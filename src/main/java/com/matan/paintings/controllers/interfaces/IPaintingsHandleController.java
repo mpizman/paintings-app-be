@@ -25,5 +25,5 @@ public interface IPaintingsHandleController {
 
     ResponseEntity<?> patchPainting(@PathVariable(value = "id") String id, @RequestBody JsonPatch patchElements);
 
-    ResponseEntity<IPaintingDTO> deletePainting(@PathVariable(value = "id") String id);
+    ResponseEntity<?> deletePainting(@PathVariable(value = "id") String id);
 }

@@ -5,4 +5,5 @@ import java.util.List;
 
 public class Constants {
     public static final List<String> PAINTING_FIELDS_NOT_UPDATABLE = Arrays.asList("uploaderUsername");
+    public static final List<String> SUPER_USERS = Arrays.asList("mpizman");
 }

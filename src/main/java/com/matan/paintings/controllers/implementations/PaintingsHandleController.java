@@ -6,10 +6,7 @@ import com.matan.paintings.models.interfaces.ISortDTO;
 import com.matan.paintings.controllers.interfaces.IPaintingsHandleController;
 import com.matan.paintings.models.implemenatations.PaintingDTO;
 import com.matan.paintings.models.interfaces.IPaintingDTO;
-import com.matan.paintings.services.interfaces.IGetPaintingByIdService;
-import com.matan.paintings.services.interfaces.IGetPaintingsService;
-import com.matan.paintings.services.interfaces.IPatchPaintingService;
-import com.matan.paintings.services.interfaces.IPostPaintingService;
+import com.matan.paintings.services.interfaces.*;
 import com.matan.paintings.services.mappers.interfaces.IPaginationInputToPaginationDTO;
 import com.matan.paintings.services.mappers.interfaces.ISortInputToSortDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +40,9 @@ public class PaintingsHandleController implements IPaintingsHandleController {
 
     @Autowired
     IPatchPaintingService patchPaintingService;
+
+    @Autowired
+    IDeletePaintingService deletePaintingService;
 
     @Override
     @GetMapping("api/paintings")
@@ -80,9 +80,9 @@ public class PaintingsHandleController implements IPaintingsHandleController {
     public ResponseEntity<?> patchPainting(@PathVariable(value = "id") String id, @RequestBody JsonPatch patchElements) {
         try {
             return ResponseEntity.ok().body(patchPaintingService.execute(id, patchElements));
-        } catch (FileNotFoundException fileNotFoundException){
+        } catch (FileNotFoundException fileNotFoundException) {
             return ResponseEntity.notFound().build();
-        } catch (InternalError internalError){
+        } catch (InternalError internalError) {
             return ResponseEntity.internalServerError().build();
         } catch (InsufficientAuthenticationException insufficientAuthenticationException) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -92,7 +92,14 @@ public class PaintingsHandleController implements IPaintingsHandleController {
     }
 
     @Override
-    public ResponseEntity<IPaintingDTO> deletePainting(String id) {
-        return null;
+    @DeleteMapping(path = "/api//painting/{id}")
+    public ResponseEntity<?> deletePainting(@PathVariable(value = "id") String id) {
+        try {
+            return ResponseEntity.ok().body(deletePaintingService.deletePaintingService(id));
+        } catch (FileNotFoundException fileNotFoundException) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("painting not found");
+        } catch (InsufficientAuthenticationException insufficientAuthenticationException) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(insufficientAuthenticationException.getMessage());
+        }
     }
 }

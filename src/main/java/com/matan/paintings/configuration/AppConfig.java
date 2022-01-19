@@ -68,4 +68,9 @@ public class AppConfig {
     public PatchPaintingService patchPaintingService(){
         return new PatchPaintingService();
     }
+
+    @Bean
+    public DeletePaintingService deletePaintingService() {
+        return new DeletePaintingService();
+    }
 }

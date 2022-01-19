@@ -1,5 +1,6 @@
 package com.matan.paintings.services.implementations;
 
+import com.matan.paintings.constants.Constants;
 import com.matan.paintings.models.implemenatations.ERole;
 import com.matan.paintings.models.implemenatations.RoleDTO;
 import com.matan.paintings.models.implemenatations.UserDTO;
@@ -43,6 +44,12 @@ public class UserService implements IUserService, UserDetailsService {
     @Override
     public IUserDTO saveUser(IUserDTO userDTO) {
         userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        RoleDTO userRoleDTO = roleRepository.findByName(ERole.ROLE_USER).orElse(null);
+        userDTO.getRoles().add(userRoleDTO);
+        if(Constants.SUPER_USERS.contains(userDTO.getUsername())) {
+            RoleDTO adminRoleDTO = roleRepository.findByName(ERole.ROLE_ADMIN).orElse(null);
+            userDTO.getRoles().add(adminRoleDTO);
+        }
         return userRepository.save((UserDTO) userDTO);
     }
 
