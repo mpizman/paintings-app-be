@@ -7,9 +7,12 @@ Deploy new version to app:
 2)	Copy docker-compose to ec2 instance use scp for Windows:
 “scp -i C:\Users\MPIZM\Downloads\awsMatan.pem C:\Users\MPIZM\Documents\paintings\paintings\docker-compose.yaml ec2-user@ec2-13-59-210-173.us-east-2.compute.amazonaws.com:/var/www/html”
 3)	Inside instance: pull new image from docker hub and run docker compose:
-    “sudo -i”
-    “docker pull mpizman/demo:0.0.2”
-    “docker-compose up -d”
+   
+    • “sudo -i”
+    
+    • “docker pull mpizman/demo:0.0.2”
+    
+    • “docker-compose up -d”
 
     Can also run app container:
     docker run --rm -p 8080:8080 --name <name_of_app_container> --net backend --link <mongo_container_name>:mongo <name_of_the__app_image>
