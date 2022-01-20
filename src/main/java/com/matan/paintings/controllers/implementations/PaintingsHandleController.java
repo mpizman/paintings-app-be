@@ -1,6 +1,7 @@
 package com.matan.paintings.controllers.implementations;
 
 import com.github.fge.jsonpatch.JsonPatch;
+import com.matan.paintings.models.interfaces.IMiniPaintingDTO;
 import com.matan.paintings.models.interfaces.IPaginationDTO;
 import com.matan.paintings.models.interfaces.ISortDTO;
 import com.matan.paintings.controllers.interfaces.IPaintingsHandleController;
@@ -46,11 +47,11 @@ public class PaintingsHandleController implements IPaintingsHandleController {
 
     @Override
     @GetMapping("api/paintings")
-    public ResponseEntity<Page<PaintingDTO>> getPaintings(@RequestParam Optional<String> searchQuery,
-                                                          @RequestParam Optional<String> sortField,
-                                                          @RequestParam Optional<String> sortOrder,
-                                                          @RequestParam Optional<Integer> pageNumber,
-                                                          @RequestParam Optional<Integer> rpp) {
+    public ResponseEntity<Page<IMiniPaintingDTO>> getPaintings(@RequestParam Optional<String> searchQuery,
+                                                               @RequestParam Optional<String> sortField,
+                                                               @RequestParam Optional<String> sortOrder,
+                                                               @RequestParam Optional<Integer> pageNumber,
+                                                               @RequestParam Optional<Integer> rpp) {
         ISortDTO sortDTO = sortInputToSortDTO.map(sortOrder.orElse("dec"), sortField.orElse("score"));
         IPaginationDTO paginationDTO = paginationInputToPaginationDTO.map(pageNumber.orElse(0), rpp.orElse(10));
         return ResponseEntity.ok().body(getPaintingsService.execute(searchQuery.orElse(""), sortDTO, paginationDTO));

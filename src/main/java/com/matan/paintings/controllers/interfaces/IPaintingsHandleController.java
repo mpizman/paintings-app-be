@@ -2,6 +2,7 @@ package com.matan.paintings.controllers.interfaces;
 
 import com.github.fge.jsonpatch.JsonPatch;
 import com.matan.paintings.models.implemenatations.PaintingDTO;
+import com.matan.paintings.models.interfaces.IMiniPaintingDTO;
 import com.matan.paintings.models.interfaces.IPaintingDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -13,11 +14,11 @@ import java.util.Optional;
 
 public interface IPaintingsHandleController {
 
-    ResponseEntity<Page<PaintingDTO>> getPaintings(@RequestParam Optional<String> searchQuery,
-                                   @RequestParam Optional<String> sortField,
-                                   @RequestParam Optional<String> sortOrder,
-                                   @RequestParam Optional<Integer> pageNumber,
-                                   @RequestParam Optional<Integer> rpp);
+    ResponseEntity<Page<IMiniPaintingDTO>> getPaintings(@RequestParam Optional<String> searchQuery,
+                                                        @RequestParam Optional<String> sortField,
+                                                        @RequestParam Optional<String> sortOrder,
+                                                        @RequestParam Optional<Integer> pageNumber,
+                                                        @RequestParam Optional<Integer> rpp);
 
     ResponseEntity<IPaintingDTO> postPainting(@RequestBody PaintingDTO painting);
 
