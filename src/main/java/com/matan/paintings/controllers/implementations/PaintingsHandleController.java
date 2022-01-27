@@ -1,7 +1,6 @@
 package com.matan.paintings.controllers.implementations;
 
 import com.github.fge.jsonpatch.JsonPatch;
-import com.matan.paintings.models.interfaces.IMiniPaintingDTO;
 import com.matan.paintings.models.interfaces.IPaginationDTO;
 import com.matan.paintings.models.interfaces.ISortDTO;
 import com.matan.paintings.controllers.interfaces.IPaintingsHandleController;
@@ -11,7 +10,6 @@ import com.matan.paintings.services.interfaces.*;
 import com.matan.paintings.services.mappers.interfaces.IPaginationInputToPaginationDTO;
 import com.matan.paintings.services.mappers.interfaces.ISortInputToSortDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -47,14 +45,26 @@ public class PaintingsHandleController implements IPaintingsHandleController {
 
     @Override
     @GetMapping("api/paintings")
-    public ResponseEntity<Page<IMiniPaintingDTO>> getPaintings(@RequestParam Optional<String> searchQuery,
-                                                               @RequestParam Optional<String> sortField,
-                                                               @RequestParam Optional<String> sortOrder,
-                                                               @RequestParam Optional<Integer> pageNumber,
-                                                               @RequestParam Optional<Integer> rpp) {
-        ISortDTO sortDTO = sortInputToSortDTO.map(sortOrder.orElse("dec"), sortField.orElse("score"));
+    public ResponseEntity<?> getPaintings(@RequestParam Optional<String> searchQuery,
+                                          @RequestParam Optional<String> uploaderUsername,
+                                          @RequestParam Optional<String> artist,
+                                          @RequestParam Optional<String> sortField,
+                                          @RequestParam Optional<String> sortOrder,
+                                          @RequestParam Optional<Integer> pageNumber,
+                                          @RequestParam Optional<Integer> rpp) {
+
+        ISortDTO sortDTO = sortInputToSortDTO.map(sortOrder.orElse("dec"), sortField.orElse(""));
         IPaginationDTO paginationDTO = paginationInputToPaginationDTO.map(pageNumber.orElse(0), rpp.orElse(10));
-        return ResponseEntity.ok().body(getPaintingsService.execute(searchQuery.orElse(""), sortDTO, paginationDTO));
+
+        try {
+            return ResponseEntity.ok().body(getPaintingsService.execute(searchQuery.orElse(""),
+                    uploaderUsername.orElse(""),
+                    artist.orElse(""),
+                    sortDTO,
+                    paginationDTO));
+        } catch (IllegalArgumentException exception) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(exception.getMessage());
+        }
     }
 
     @Override
@@ -88,7 +98,7 @@ public class PaintingsHandleController implements IPaintingsHandleController {
         } catch (InsufficientAuthenticationException insufficientAuthenticationException) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } catch (RuntimeException runtimeException) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(runtimeException.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(runtimeException.getMessage());
         }
     }
 

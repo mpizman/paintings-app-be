@@ -7,5 +7,9 @@ import org.springframework.data.domain.Page;
 
 public interface IGetPaintingsService {
 
-    Page<IMiniPaintingDTO> execute(String searchQuery, ISortDTO sortDTO, IPaginationDTO paginationDTO);
+    Page<IMiniPaintingDTO> execute(String searchQuery,
+                                   String uploaderUsername,
+                                   String artist,
+                                   ISortDTO sortDTO,
+                                   IPaginationDTO paginationDTO);
 }

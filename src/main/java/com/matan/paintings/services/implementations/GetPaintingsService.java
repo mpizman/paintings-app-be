@@ -11,9 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.data.mongodb.core.query.TextQuery;
 
+import javax.inject.Inject;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,25 +31,53 @@ public class GetPaintingsService implements IGetPaintingsService {
     @Autowired
     MongoTemplate mongoTemplate;
 
-    @Autowired
+    @Inject
     IPaintingDTOToMiniPaintingDTO paintingDTOToMiniPaintingDTO;
 
     @Override
-    public Page<IMiniPaintingDTO> execute(String searchQuery, ISortDTO sortDTO, IPaginationDTO paginationDTO) {
+    public Page<IMiniPaintingDTO> execute(String searchQuery,
+                                          String uploaderUsername,
+                                          String artist,
+                                          ISortDTO sortDTO,
+                                          IPaginationDTO paginationDTO) {
+        Sort sort;
         List<PaintingDTO> paintingDTOList;
-        TextCriteria textCriteria = TextCriteria.forDefaultLanguage().matchingAny(searchQuery);
-        Sort sort = Sort.by(sortDTO.getOrder(), "score");
-        TextQuery textQuery = TextQuery.queryText(textCriteria);
+        Query query = addCriteriaToQuery(searchQuery, uploaderUsername, artist);
 
-        if ("date".equals(sortDTO.getField())) {
-            sort = Sort.by(sortDTO.getOrder(), "date");
+        if (sortDTO.getField().equals("score") && searchQuery.isEmpty()) {
+            throw new IllegalArgumentException("Cant sort by score for empty query");
+        }
+
+        if (!sortDTO.getField().isEmpty()) {
+            sort = Sort.by(sortDTO.getOrder(), sortDTO.getField());
+        } else {
+            if (searchQuery.isEmpty()) {
+                sort = Sort.by(sortDTO.getOrder(),"date");
+            } else {
+                sort = Sort.by(sortDTO.getOrder(),"score");
+            }
         }
 
         Pageable pageable = PageRequest.of(paginationDTO.getPageNumber(), paginationDTO.getRpp(), sort);
-        long count = mongoOperations.count(textQuery, PaintingDTO.class);
-        paintingDTOList = mongoTemplate.find(textQuery.with(pageable), PaintingDTO.class);
+        long count = mongoOperations.count(query, PaintingDTO.class);
+        paintingDTOList = mongoTemplate.find(query.with(pageable), PaintingDTO.class);
 
         return new PageImpl<>(mapPaintingListToMiniPaintingList(paintingDTOList), pageable, count);
+    }
+
+    Query addCriteriaToQuery(String searchQuery, String uploaderUsername, String artist) {
+        Query query = new Query();
+        if (searchQuery.length() > 0) {
+            TextCriteria textCriteria = TextCriteria.forDefaultLanguage().matchingAny(searchQuery);
+            query = TextQuery.queryText(textCriteria);
+        }
+        if (uploaderUsername.length() > 0) {
+            query.addCriteria(Criteria.where("uploaderUsername").is(uploaderUsername));
+        }
+        if (artist.length() > 0) {
+            query.addCriteria(Criteria.where("artist").regex("(?i)" + artist));
+        }
+        return query;
     }
 
     List<IMiniPaintingDTO> mapPaintingListToMiniPaintingList(List<PaintingDTO> paintingDTOList) {

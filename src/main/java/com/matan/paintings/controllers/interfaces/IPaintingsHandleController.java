@@ -14,11 +14,13 @@ import java.util.Optional;
 
 public interface IPaintingsHandleController {
 
-    ResponseEntity<Page<IMiniPaintingDTO>> getPaintings(@RequestParam Optional<String> searchQuery,
-                                                        @RequestParam Optional<String> sortField,
-                                                        @RequestParam Optional<String> sortOrder,
-                                                        @RequestParam Optional<Integer> pageNumber,
-                                                        @RequestParam Optional<Integer> rpp);
+    ResponseEntity<?> getPaintings(@RequestParam Optional<String> searchQuery,
+                                                               @RequestParam Optional<String> uploaderUsername,
+                                                               @RequestParam Optional<String> artist,
+                                                               @RequestParam Optional<String> sortField,
+                                                               @RequestParam Optional<String> sortOrder,
+                                                               @RequestParam Optional<Integer> pageNumber,
+                                                               @RequestParam Optional<Integer> rpp);
 
     ResponseEntity<IPaintingDTO> postPainting(@RequestBody PaintingDTO painting);
 
