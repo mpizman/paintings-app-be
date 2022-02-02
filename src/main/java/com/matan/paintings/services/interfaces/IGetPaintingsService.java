@@ -10,6 +10,7 @@ public interface IGetPaintingsService {
     Page<IMiniPaintingDTO> execute(String searchQuery,
                                    String uploaderUsername,
                                    String artist,
+                                   String name,
                                    ISortDTO sortDTO,
                                    IPaginationDTO paginationDTO);
 }

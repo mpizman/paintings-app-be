@@ -2,11 +2,11 @@ package com.matan.paintings.models.implemenatations;
 
 import com.matan.paintings.models.interfaces.IPaintingDTO;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.TextScore;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
@@ -15,7 +15,7 @@ public class PaintingDTO implements IPaintingDTO {
     @Id
     private String id;
     @TextIndexed(weight=2)
-    @Indexed(unique=true)
+    @NotBlank
     private String name;
     @TextIndexed
     private String description;

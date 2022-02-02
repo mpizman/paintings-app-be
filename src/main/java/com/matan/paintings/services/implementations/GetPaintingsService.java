@@ -38,11 +38,12 @@ public class GetPaintingsService implements IGetPaintingsService {
     public Page<IMiniPaintingDTO> execute(String searchQuery,
                                           String uploaderUsername,
                                           String artist,
+                                          String name,
                                           ISortDTO sortDTO,
                                           IPaginationDTO paginationDTO) {
         Sort sort;
         List<PaintingDTO> paintingDTOList;
-        Query query = addCriteriaToQuery(searchQuery, uploaderUsername, artist);
+        Query query = addCriteriaToQuery(searchQuery, uploaderUsername, artist, name);
 
         if (sortDTO.getField().equals("score") && searchQuery.isEmpty()) {
             throw new IllegalArgumentException("Cant sort by score for empty query");
@@ -65,17 +66,20 @@ public class GetPaintingsService implements IGetPaintingsService {
         return new PageImpl<>(mapPaintingListToMiniPaintingList(paintingDTOList), pageable, count);
     }
 
-    Query addCriteriaToQuery(String searchQuery, String uploaderUsername, String artist) {
+    Query addCriteriaToQuery(String searchQuery, String uploaderUsername, String artist, String name) {
         Query query = new Query();
         if (searchQuery.length() > 0) {
             TextCriteria textCriteria = TextCriteria.forDefaultLanguage().matchingAny(searchQuery);
             query = TextQuery.queryText(textCriteria);
         }
         if (uploaderUsername.length() > 0) {
-            query.addCriteria(Criteria.where("uploaderUsername").is(uploaderUsername));
+            query.addCriteria(Criteria.where("uploaderUsername").regex("(?i)^" + uploaderUsername +"$"));
         }
         if (artist.length() > 0) {
             query.addCriteria(Criteria.where("artist").regex("(?i)" + artist));
+        }
+        if (name.length() > 0) {
+            query.addCriteria(Criteria.where("name").regex("(?i)^" + name +"$"));
         }
         return query;
     }

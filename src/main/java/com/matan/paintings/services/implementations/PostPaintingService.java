@@ -14,6 +14,6 @@ public class PostPaintingService implements IPostPaintingService {
 
     public IPaintingDTO execute(IPaintingDTO painting) {
         painting.setUploaderUsername((String) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-        return paintingRepository.insert((PaintingDTO) painting);
+        return paintingRepository.save((PaintingDTO) painting);
     }
 }

@@ -13,6 +13,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -31,14 +34,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        http.cors().configurationSource(request -> {
+                    CorsConfiguration corsConfiguration = new CorsConfiguration().applyPermitDefaultValues();
+                    corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000")); //put in config env var
+                    return corsConfiguration;
+                }
+        );
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.authorizeRequests().antMatchers(HttpMethod.GET,"/api/painting/**").permitAll()
+        http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/painting/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/painting").hasAnyAuthority("ROLE_USER")
-                .antMatchers(HttpMethod.GET,"/api/paintings").permitAll()
-                .antMatchers(HttpMethod.PATCH,"/api/paintings/**").hasAnyAuthority("ROLE_USER")
-                .antMatchers(HttpMethod.DELETE,"/api/paintings/**").hasAnyAuthority("ROLE_USER")
-                .antMatchers(HttpMethod.POST,"/api/user").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/paintings").permitAll()
+                .antMatchers(HttpMethod.PATCH, "/api/paintings/**").hasAnyAuthority("ROLE_USER")
+                .antMatchers(HttpMethod.DELETE, "/api/paintings/**").hasAnyAuthority("ROLE_USER")
+                .antMatchers(HttpMethod.POST, "/api/user").permitAll()
                 .antMatchers("/api/user").hasAnyAuthority("ROLE_ADMIN")
                 .antMatchers("/api/users").hasAnyAuthority("ROLE_ADMIN")
                 .antMatchers("/api/role").hasAnyAuthority("ROLE_ADMIN")

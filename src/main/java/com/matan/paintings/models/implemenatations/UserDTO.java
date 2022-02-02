@@ -19,13 +19,11 @@ public class UserDTO implements IUserDTO {
 
     @NotBlank
     @Size(max = 20)
-    @Indexed(unique=true)
     private String username;
 
     @NotBlank
     @Size(max = 100)
     @Email
-    @Indexed(unique=true)
     private String email;
 
     @NotBlank

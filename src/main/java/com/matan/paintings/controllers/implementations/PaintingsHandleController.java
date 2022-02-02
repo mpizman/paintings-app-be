@@ -48,6 +48,7 @@ public class PaintingsHandleController implements IPaintingsHandleController {
     public ResponseEntity<?> getPaintings(@RequestParam Optional<String> searchQuery,
                                           @RequestParam Optional<String> uploaderUsername,
                                           @RequestParam Optional<String> artist,
+                                          @RequestParam Optional<String> name,
                                           @RequestParam Optional<String> sortField,
                                           @RequestParam Optional<String> sortOrder,
                                           @RequestParam Optional<Integer> pageNumber,
@@ -60,6 +61,7 @@ public class PaintingsHandleController implements IPaintingsHandleController {
             return ResponseEntity.ok().body(getPaintingsService.execute(searchQuery.orElse(""),
                     uploaderUsername.orElse(""),
                     artist.orElse(""),
+                    name.orElse(""),
                     sortDTO,
                     paginationDTO));
         } catch (IllegalArgumentException exception) {
@@ -103,7 +105,7 @@ public class PaintingsHandleController implements IPaintingsHandleController {
     }
 
     @Override
-    @DeleteMapping(path = "/api//painting/{id}")
+    @DeleteMapping(path = "/api/painting/{id}")
     public ResponseEntity<?> deletePainting(@PathVariable(value = "id") String id) {
         try {
             return ResponseEntity.ok().body(deletePaintingService.deletePaintingService(id));
