@@ -37,7 +37,7 @@ services:
       default:
         ipv4_address: 172.18.0.3
   painting-app:
-    image: mpizman/demo:0.1.0
+    image: mpizman/demo:0.1.1
     container_name: paintings-app
     restart: always
     ports:
