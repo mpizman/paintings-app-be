@@ -10,6 +10,7 @@ import com.matan.paintings.services.interfaces.*;
 import com.matan.paintings.services.mappers.interfaces.IPaginationInputToPaginationDTO;
 import com.matan.paintings.services.mappers.interfaces.ISortInputToSortDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -73,8 +74,12 @@ public class PaintingsHandleController implements IPaintingsHandleController {
     @PostMapping(path = "api/painting",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<IPaintingDTO> postPainting(@RequestBody PaintingDTO painting) {
-        return ResponseEntity.ok().body(postPaintingService.execute(painting));
+    public ResponseEntity<?> postPainting(@RequestBody PaintingDTO painting) {
+        try {
+            return ResponseEntity.ok().body(postPaintingService.execute(painting));
+        } catch (DuplicateKeyException exception) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(exception.getMessage());
+        }
     }
 
     @Override
