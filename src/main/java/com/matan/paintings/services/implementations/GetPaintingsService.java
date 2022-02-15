@@ -1,12 +1,10 @@
 package com.matan.paintings.services.implementations;
 
 import com.matan.paintings.models.implemenatations.PaintingDTO;
-import com.matan.paintings.models.interfaces.IMiniPaintingDTO;
 import com.matan.paintings.models.interfaces.IPaginationDTO;
 import com.matan.paintings.models.interfaces.ISortDTO;
 import com.matan.paintings.repository.PaintingRepository;
 import com.matan.paintings.services.interfaces.IGetPaintingsService;
-import com.matan.paintings.services.mappers.interfaces.IPaintingDTOToMiniPaintingDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.MongoOperations;
@@ -16,9 +14,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.data.mongodb.core.query.TextQuery;
 
-import javax.inject.Inject;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class GetPaintingsService implements IGetPaintingsService {
 
@@ -31,16 +27,13 @@ public class GetPaintingsService implements IGetPaintingsService {
     @Autowired
     MongoTemplate mongoTemplate;
 
-    @Inject
-    IPaintingDTOToMiniPaintingDTO paintingDTOToMiniPaintingDTO;
-
     @Override
-    public Page<IMiniPaintingDTO> execute(String searchQuery,
-                                          String uploaderUsername,
-                                          String artist,
-                                          String name,
-                                          ISortDTO sortDTO,
-                                          IPaginationDTO paginationDTO) {
+    public Page<PaintingDTO> execute(String searchQuery,
+                                      String uploaderUsername,
+                                      String artist,
+                                      String name,
+                                      ISortDTO sortDTO,
+                                      IPaginationDTO paginationDTO) {
         Sort sort;
         List<PaintingDTO> paintingDTOList;
         Query query = addCriteriaToQuery(searchQuery, uploaderUsername, artist, name);
@@ -63,7 +56,7 @@ public class GetPaintingsService implements IGetPaintingsService {
         long count = mongoOperations.count(query, PaintingDTO.class);
         paintingDTOList = mongoTemplate.find(query.with(pageable), PaintingDTO.class);
 
-        return new PageImpl<>(mapPaintingListToMiniPaintingList(paintingDTOList), pageable, count);
+        return new PageImpl<>(paintingDTOList, pageable, count);
     }
 
     Query addCriteriaToQuery(String searchQuery, String uploaderUsername, String artist, String name) {
@@ -82,11 +75,5 @@ public class GetPaintingsService implements IGetPaintingsService {
             query.addCriteria(Criteria.where("name").regex("(?i)^" + name +"$"));
         }
         return query;
-    }
-
-    List<IMiniPaintingDTO> mapPaintingListToMiniPaintingList(List<PaintingDTO> paintingDTOList) {
-        return paintingDTOList.stream()
-                .map(paintingDTO -> paintingDTOToMiniPaintingDTO.map(paintingDTO))
-                .collect(Collectors.toList());
     }
 }

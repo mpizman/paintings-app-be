@@ -1,16 +1,12 @@
 package com.matan.paintings.configuration;
 
-import com.matan.paintings.models.implemenatations.MiniPaintingDTO;
 import com.matan.paintings.models.implemenatations.PaginationDTO;
 import com.matan.paintings.models.implemenatations.SortDTO;
 import com.matan.paintings.services.implementations.*;
 import com.matan.paintings.services.mappers.implementation.PaginationInputToPaginationDTO;
-import com.matan.paintings.services.mappers.implementation.PaintingDTOToMiniPaintingDTO;
 import com.matan.paintings.services.mappers.implementation.SortInputToSortDTO;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -78,14 +74,4 @@ public class AppConfig {
         return new DeletePaintingService();
     }
 
-    @Bean
-    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-    public MiniPaintingDTO miniPaintingDTO() {
-        return new MiniPaintingDTO();
-    }
-
-    @Bean
-    public PaintingDTOToMiniPaintingDTO paintingDTOToMiniPaintingDTO() {
-        return new PaintingDTOToMiniPaintingDTO();
-    }
 }
