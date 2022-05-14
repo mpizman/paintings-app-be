@@ -36,7 +36,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().configurationSource(request -> {
                     CorsConfiguration corsConfiguration = new CorsConfiguration().applyPermitDefaultValues();
-                    corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000")); //put in config env var
+                    corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000"));
+                    corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PATCH", "DELETE"));//put in config env var
                     return corsConfiguration;
                 }
         );
